@@ -101,10 +101,23 @@ const VolunteerDashboard = () => {
                   </span>
                 </div>
                 <p className="mt-2 text-sm text-ink/70">{r.description}</p>
-                <p className="mt-1 font-mono text-xs text-ink/40">{r.district} · {r.numberOfPeople} people</p>
-                <button onClick={() => handleAccept(r._id)} className="btn-primary mt-3 w-full">
-                  Accept
-                </button>
+<p className="mt-1 font-mono text-xs text-ink/40">{r.district} · {r.numberOfPeople} people</p>
+{r.media?.length > 0 && (
+  <div className="mt-2 flex gap-2">
+    {r.media.map((m) => (
+      <a key={m.publicId} href={m.url} target="_blank" rel="noreferrer">
+        {m.type === "video" ? (
+          <video src={m.url} className="h-14 w-14 rounded object-cover" muted />
+        ) : (
+          <img src={m.url} alt="Evidence from victim" className="h-14 w-14 rounded object-cover" />
+        )}
+      </a>
+    ))}
+  </div>
+)}
+<button onClick={() => handleAccept(r._id)} className="btn-primary mt-3 w-full">
+  Accept
+</button>
               </li>
             ))}
           </ul>

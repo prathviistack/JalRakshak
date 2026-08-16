@@ -41,10 +41,6 @@ const useSocket = () => {
       dispatch(upsertFromSocket(request));
     };
 
-    const handleNewNotification = (notification) => {
-      dispatch(receiveLiveNotification(notification));
-      toast(notification.title);
-    };
 
     const handleWeatherAlert = (alert) => {
       toast.error(`⚠️ ${alert.headline} (${alert.district})`, { duration: 6000 });
@@ -53,6 +49,32 @@ const useSocket = () => {
     const handleNewAnnouncement = (announcement) => {
       toast(`📢 ${announcement.title}`, { duration: 5000 });
     };
+
+    const handleNewNotification = (notification) => {
+  dispatch(receiveLiveNotification(notification));
+  toast(notification.title);
+};
+
+const handleNewMessage = ({ message }) => {
+  // Don't notify the sender about their own message
+  // (server emits to all participants, including the sender)
+  if (message.sender._id === user?._id) return;
+
+  toast(`💬 ${message.sender.name}: ${message.text}`, { duration: 5000 });
+
+  // Also surface it in the notification bell so it's not missed if the toast is dismissed
+  dispatch(
+    receiveLiveNotification({
+      _id: `msg-${message._id}`,
+      title: `New message from ${message.sender.name}`,
+      message: message.text,
+      type: "message",
+      isRead: false,
+      createdAt: message.createdAt,
+    })
+  );
+};
+
 
     socket.on("newEmergency", handleNewEmergency);
     socket.on("requestAccepted", handleRequestAccepted);

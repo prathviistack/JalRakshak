@@ -38,7 +38,7 @@ const emergencyRequestSchema = new mongoose.Schema(
       coordinates: { type: [Number], required: true }, // [lng, lat]
     },
 
-    media: [{ url: String, publicId: String, type: String }],
+    media: [{ url: String, publicId: String, type: {type:String },},],
 
     acceptedAt: { type: Date },
     completedAt: { type: Date },
